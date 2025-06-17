@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💖 Carta Romántica Animada 💖</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pyodide/0.25.0/pyodide.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffb6c1, #ffe4e1);
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .heart {
+            text-align: center;
+            font-size: 60px;
+            color: #dc143c;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .title {
+            text-align: center;
+            color: #c71585;
+            font-size: 36px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .message {
+            color: #8b0000;
+            font-size: 20px;
+            line-height: 1.6;
+            text-align: center;
+            margin: 15px 0;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .message:nth-child(3) { animation-delay: 0.5s; }
+        .message:nth-child(4) { animation-delay: 1s; }
+        .message:nth-child(5) { animation-delay: 1.5s; }
+        .message:nth-child(6) { animation-delay: 2s; }
+        .message:nth-child(7) { animation-delay: 2.5s; }
+        .message:nth-child(8) { animation-delay: 3s; }
+        .message:nth-child(9) { animation-delay: 3.5s; }
+        .message:nth-child(10) { animation-delay: 4s; }
+        .message:nth-child(11) { animation-delay: 4.5s; }
+        .message:nth-child(12) { animation-delay: 5s; }
+        .message:nth-child(13) { animation-delay: 5.5s; }
+        .message:nth-child(14) { animation-delay: 6s; }
+        
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            color: #ff69b4;
+            animation: float 6s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .python-output {
+            background: #2d2d2d;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            min-height: 100px;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts" id="floating-hearts"></div>
+    
+    <div class="container">
+        <h1 class="title">💕 Mi Amor Eterno 💕</h1>
+        
+        <div class="heart">💖</div>
+        
+        <div class="message">Para la persona más especial</div>
+        <div class="message">de mi vida...</div>
+        <div class="message"></div>
+        <div class="message">Eres la razón por la que</div>
+        <div class="message">mi corazón late más fuerte</div>
+        <div class="message">cada día.</div>
+        <div class="message"></div>
+        <div class="message">Tu sonrisa ilumina</div>
+        <div class="message">mis días más oscuros</div>
+        <div class="message">y tu amor me hace</div>
+        <div class="message">la persona más feliz</div>
+        <div class="message">del mundo.</div>
+        <div class="message"></div>
+        <div class="message">💖 Te amo infinitamente 💖</div>
+        
+        <div class="controls">
+            <button onclick="runPythonCode()">Ejecutar Código Python 💝</button>
+            <button onclick="createMoreHearts()">Más Corazones 💕</button>
+        </div>
+        
+        <div class="python-output" id="output">
+            Haz clic en "Ejecutar Código Python" para ver la magia...
+        </div>
+    </div>
+
+    <script>
+        let pyodide;
+        
+        // Inicializar Pyodide
+        async function initPyodide() {
+            pyodide = await loadPyodide();
+            console.log("Pyodide cargado exitosamente");
+        }
+        
+        // Ejecutar código Python
+        async function runPythonCode() {
+            if (!pyodide) {
+                document.getElementById('output').innerHTML = "Cargando Pyodide...";
+                await initPyodide();
+            }
+            
+            const pythonCode = `
+import random
+import math
+import time
+
+# Función para generar mensajes románticos
+def generar_mensaje_romantico():
+    frases = [
+        "🌟 Cada día contigo es una nueva aventura llena de amor",
+        "💫 Tu amor es la melodía más hermosa que mi corazón conoce",
+        "🌹 Eres mi sol en los días nublados y mi luna en las noches oscuras",
+        "💖 Contigo he aprendido que el amor verdadero sí existe",
+        "🦋 Tu sonrisa es capaz de iluminar hasta el rincón más oscuro de mi alma",
+        "⭐ Eres la respuesta a todas las oraciones que nunca supe que hice",
+        "🌸 Cada latido de mi corazón grita tu nombre",
+        "💝 Eres mi hogar, mi paz, mi todo"
+    ]
+    return random.choice(frases)
+
+# Función para crear arte ASCII romántico
+def crear_corazon_ascii():
+    corazon = '''
+    💖💖💖💖💖💖💖💖💖💖💖💖
+    💖                    💖
+    💖  ♥♥    ♥♥    ♥♥    💖
+    💖♥♥♥♥  ♥♥♥♥  ♥♥♥♥♥  💖
+    💖♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥  💖
+    💖  ♥♥♥♥♥♥♥♥♥♥♥♥♥♥    💖
+    💖    ♥♥♥♥♥♥♥♥♥♥      💖
+    💖      ♥♥♥♥♥♥        💖
+    💖        ♥♥          💖
+    💖                    💖
+    💖💖💖💖💖💖💖💖💖💖💖💖
+    '''
+    return corazon
+
+# Función para calcular compatibilidad amorosa (por diversión)
+def calcular_compatibilidad():
+    base = 85  # Base alta porque es una carta de amor
+    variacion = random.randint(-5, 15)
+    return min(100, base + variacion)
+
+# Generar contenido romántico
+mensaje = generar_mensaje_romantico()
+corazon = crear_corazon_ascii()
+compatibilidad = calcular_compatibilidad()
+
+# Crear timestamp romántico
+import datetime
+fecha_actual = datetime.datetime.now()
+timestamp = fecha_actual.strftime("Creado con amor el %d de %B de %Y a las %H:%M")
+
+# Resultado final
+resultado = f'''
+{corazon}
+
+💕 MENSAJE ESPECIAL PARA TI 💕
+
+{mensaje}
+
+💖 NIVEL DE COMPATIBILIDAD: {compatibilidad}% 💖
+
+{timestamp}
+
+💝 Este mensaje fue generado con Python y mucho amor 💝
+'''
+
+print(resultado)
+`;
+
+            try {
+                pyodide.runPython(pythonCode);
+                const output = pyodide.runPython("resultado");
+                document.getElementById('output').innerHTML = `<pre>${output}</pre>`;
+            } catch (error) {
+                document.getElementById('output').innerHTML = `Error: ${error}`;
+            }
+        }
+        
+        // Crear corazones flotantes
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.innerHTML = ['💖', '💕', '💗', '💝', '💘'][Math.floor(Math.random() * 5)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            
+            document.getElementById('floating-hearts').appendChild(heart);
+            
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    heart.parentNode.removeChild(heart);
+                }
+            }, 6000);
+        }
+        
+        // Crear más corazones
+        function createMoreHearts() {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => createFloatingHeart(), i * 200);
+            }
+        }
+        
+        // Crear corazones automáticamente
+        setInterval(createFloatingHeart, 1000);
+        
+        // Inicializar cuando se carga la página
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('output').innerHTML = "Pyodide listo. Haz clic para ejecutar código Python 💖";
+            }, 2000);
+        });
+        
+        // Manejar tecla ESC
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                if (confirm('¿Estás seguro de que quieres cerrar esta carta de amor? 💔')) {
+                    window.close();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
